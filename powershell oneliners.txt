@@ -1,0 +1,4 @@
+in powershell for egrep command replacement was 
+./waybackurl.exe google.com | Select-String "=" | tee google.txt
+
+Select-String -Path .\anurag.txt -Pattern 'jpg', 'csv', 'php' -NotMatch  | tee finally.txt  

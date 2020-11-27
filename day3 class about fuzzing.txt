@@ -1,0 +1,39 @@
+Fuzzing was as similar as spiking. So in fuzzing also we are sending a bunch of keywords and breaking the vulnserver so the difference b/w both of them was in spiking we are using multiple commands inorder to find which was vulnerable. But in fuzzing we are doing attack on the vulnserver to perform breaking of it.
+So, whenever the vulnserver was crashed we are going to restart it and IMMUNITY DEBUGGER as the ADMINISTRATORs.
+Make sure everything was running if not just run it
+Now we are going to run a simple python script inorder to do fuzzing so the script was down below:-
+
+1.py
+------
+#!/usr/bin/python
+
+import sys, socket
+from time import sleep
+
+buffer = "A" * 100
+
+while True:
+              try:
+		s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		s.connect(('192.168.1.90',9999))
+		s.send(('TRUN /.:/' + buffer))
+		s.close()
+		sleep(1)
+		buffer = buffer + "A"*100
+             except:
+		print "Fuzzing crashed at %s bytes" % str(len(buffer))
+		sys.exit()
+
+here the ---> /.:/ was called as register. So that was added
+
+now chnage the mode of program to execute mode so it was done with $ chmod +x 1.py
+Before executing lets re-verify  that whether the debugger and vulnserver was running or not so if not running please make it as running.
+
+Now, run the program in our kali linux and then watch the immunity debugger so you can see it and then you can see that the connections were coming and exiting terminating in our windows cmd so while the program was running then in our cmd we can see that it was paused. So then we can say that the immunity debugger was being crashed.
+So, just point back to the Kali linux and then click on stop by using CONTROL+C.
+So, then after pressing the Cnt+C we can see that we got an output as below:-
+^C Fuzzing crashed at 2700 bytes
+that means that we got crashed at 2700 bytes of code.
+So go back to the Immunity Debugger-Vulnserver.exe and then see the Registers window in the Immunity Debugger so then you can see that there 
+So there we can see that compared to previous day class eample in this sesion/example we didn't over rolled the EIP as in previous sesion/day class we over rolled the EIP.
+So here we need to know that where we were actually crashed. According to our 1.py code the crash was happened at 2700 bytes of code during fuzzing. So, here in the next class we were going to have a tool which gives us the exact location where the buffer was over flowed like where the EIP was there. Now, while the stack was overflowed then we were finding the exact location on where it was overflowed and then we are going to write an exploit code so that whenver we had the exploit in the EIP then we had the complete control over the system/stack which mean that we are perfroming a reverse engineering on it

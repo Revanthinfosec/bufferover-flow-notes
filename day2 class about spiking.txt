@@ -1,0 +1,59 @@
+Before starting with the spiking we had a couple of things to be done such as:-
+1. turn off yours windows defender such as real time protection.
+2. run the vulnserver which was downloaded and save it in a folder. Now, go to that folder and run the Vulnserver.exe file as an administrator.
+3. now run the immunity debbuger also and bring the immunity debbuger to the desktop.
+4. in immunity debugger go and click on file >> attach >>scroll and select vulnserver .
+5. Now, you see that vulnserver was paused so just click on PLAY button and in to right bottom you can see that it was RUNNING.
+6. Now, go to kali linux. So here firstly we need to connect our windows machine with kali linux so so to do that we need to find the exact ip address of our windows mchine and port number on which the vulnserver was running in other case the port number on which vulserver will run is port no : 9999.
+Then we had the IP & PORT number then we need to go to our linux cmd prompt and then run a tool called netcat. So, the commands are:-
+
+$     nc -nv 192.168.1.90 9999
+o/p:- Welcome to Vulnerable server ! Enter Help for Help.
+$       HELP
+o/p:-  Valid Commands:
+Help
+STATS 
+RTIME
+LTIME
+SRUN
+TRUN
+GMON
+GDOG
+KSTET
+GTER
+HTER
+LTER
+KSTAN
+EXIT
+---------------------------------------------------------
+So, the primary command on which we were focusing was the TRUN command. So, we are going to find how the TRUN command was vulnerable itself. So, what we are doing was just going/doing spiking. 
+What spiking was doing means it take the command called STATS so when we do the STATS it will take a value such as (stat_value) and then it will be going to make an overflow for this. So, incase if the buffer was overflowed and the it crashes then we can say that this STATS was vulnerable. So if not overflow we can say that ok this was not vulnerable so we can move to next one
+---------------------------------------------------------
+So in order to test the SPIKE then we need to go with a module called as GENERIC_TCP which was a module used to test the SPIKING so in order to use that thing we should go with some command for that so just click EXIT then you will be pointed back to the TERMINAL so then go with below commad line command...
+--------------------------------
+$  generic_send_tcp
+o/p:- here we are getting the usage of how spike will be used. So, read that line so you will understand clearly.
+Now, we need something called as spike_script so lets see it. The spike script should be ended with ".spk" extension
+-----spike code:
+	s_readline();
+	s_string("STATS ");
+	s_string_variable("0");
+So here what we are doing was when we do spiking it mean we are sending all different variables in different itterations. So, we might send 1000, 2000 or less at a time in order to break the program. So, save the program as stats.spk and run it according to the execution type given.
+Execution:- 
+$ generic_send_tcp 192.168.1.90 9999 stats.spk 0 0
+o/p:- so when we enter this thing as a result we are getting the TCP connections on our WINDOWS CMD PROMPT & then as a result the CONNECTIONS were also getting RETRIVED/DISCONNECTED so this means that this was not VULNERABLE so lets move to another step/module.
+----------------------------------------------------------
+Now, we are going towards the next module in which the VULNSERVER was VULNERABLE so move to it. 
+In order to do that we are going to have another .spk script with any extension so here we are having the another spk script such as " trun.spk ". So, script of this was given below:-
+trun.spk
+s_readline();
+s_string("TRUN ");
+s_string_variable("0");
+ 
+so when we execute / run the above thing inspite of stat.sdk then as a result we are getting PAUSED for this so for that just see the below line at the RIGHT side of the TERMINAL / IMMUNITY DEBUGGER.
+So in order to check it just read the bottom left side opposite to PAUSED command.
+Now, in the immunity debugger just see the REGISTERS box.
+So in the register box you are seeing whole STACK annotomy. So, in register you can see that there was someting called EAX with TRUN phase having all set of A characters.
+Then you see that there were some numbers 41414141 which were the hex values of letter A and these were in the EBP aka EXTENDED BASE POINTER. and you can see that letter A was also shifted to the EBP and then it means we were overflowed the flow of letter A. 
+Now, at the bottom also we had something such as EIP with no's 41414141 which was a hex value of alphabet A and they were about 4 bytes which was overflowed and our WINDOWS CMD was also not responsing which means we were having something wrong which mean VULNERABLE.
+NOTE: Just see the same thing during the stat.stk so in register we had nothing present. 

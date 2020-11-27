@@ -1,0 +1,41 @@
+What we learn here:-
+1. Anatomy of memory
+2. Anatomy of the stack
+3. Buffer Overflow Walkthrough(hands on)
+---------------------------------------------------------
+---------------------------------------------------------
+a) Anatomy of memory:
+just see the image in the notes for m/m anatomy.
+--------------------------------
+b) Anatomy of the stack:
+just see the picture so you can understand it.
+*notes regarding the stack. So, in stack we are having components like ESP, Buffer space, EBP, EIP/Return Address
+ESP   = 	EXTENDED STACK POINTER
+	BUFFER SPACE
+EBP   = 	EXTENDED BASE POINTER
+EIP     = 	EXTENDED INSTRUCTION POINTER
+---------------------------------------------------------
+So in the stack what happens means we are having a buffer space. So, this buffer space was going to have some of the input values that were encountered into the Buffer Space as we see. So whenever the stack was having good architeccture then as a result the data should not exced the buffer space. So, if the data was exceding the bufferspace then as a result the data will be moved/steps into the Extra Buffer Space aka EBP and then it goes into the Extended Instruction Pointer aka EIP where we are giving a set of instructions to be followed. So as we see the data was moved / flowed into the EBP & EIP this results in the Buffer Overflow attack. So these overflowed thing might also be a malicious code which was encountered by an attacker which results in reverse shell. 
+---------------------------------------------------------
+---------------------------------------------------------
+STEPS TO CONDUCT A BUFFER OVERFLOW ATTACK.
+ 1. Spiking :- it was a method used to find the vulnerable part of a program.
+ 2. Fuzzing :- once we find a vulnerable program such as spiking we go with the next step called as fuzzing. Fuzzing was as similar as spiking such as in fuzzing we send a bunch of characters & then we see that whether we can break the program or not.
+ 3. Finding the Offset :- so once we found the it was breakable then what we can do was simply Find out at what point we can break it.
+ 4. Overwriting the EIP :- once we got the Offset then we use that to overwrite the IP pointer address that we are talking about. Once we had EIP control we go to 5th step.
+ 5. Finding Bad Characters :- As we once had the EIP controlled then we neec to do something likeFinding bad characters and the right modules inorder to go with it.
+ 6. Finding the Right Module :- so we need to find a right module to perform attack
+ 7. Generating Shellcode :- Now, we are having right odule then just go with a shell code to perform bufferover flow attack.
+ 8. Now, we are pointing the EIP to our shellcode and then we will be hopeully geting the 8th one ROOT
+---------------------------------------------------------
+---------------------------------------------------------
+Tools we are going to use
+ 1. Victim machine: windows 10
+ 2. Vulnerable software : vulnserver
+ 3. Attacker machine: kali linux or parrot
+ 4. Debugger: Immunity Debugger
+Download all of them from google so it was all set for the course
+---------------------------------------------------------
+---------------------------------------------------------
+
+ 
